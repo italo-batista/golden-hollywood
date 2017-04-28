@@ -44,28 +44,49 @@ button h4 {
     margin: 20px auto;
 }
 
-.section {
-    margin: 10px 50px;
+.img_section {
+    margin-bottom: 30px;
+}
+
+.first_group {
+    margin-right: 30px;
+    float: left;
+    position: relative;
+}
+
+.second_group {
+    margin-top: 60px;
+    position: relative;
 }
 
 
 
 #best-actress {
     display: block;
+    width: 1210px;
+    height: 1210px;
 }
 
 #best-films {
     display: none;
+    width: 1210px;
+    height: 1210px;
 }
 
 #best-actor {
     display: none;
+    width: 1210px;
+    height: 1210px;
 }
 
 #supporting-actress {
     display: none;
+    width: 1210px;
+    height: 1210px;
 }
 
 #supporting-actor {
     display: none;
+    width: 1210px;
+    height: 1210px;
 }

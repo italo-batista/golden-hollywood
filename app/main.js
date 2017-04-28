@@ -20,9 +20,13 @@ function seleciona(chart) {
 }
 
 function limpa() {
-    var tam = document.getElementsByClassName("row").length;
-    for (var i = 1; i < tam; i++) {
-        document.getElementsByClassName("row")[i].remove();
+
+    ids = [ "best-films", "best-actress", "best-actor", "supporting-actress", "supporting-actor" ];
+
+    var content = d3.select(".content");
+    for (var i = 0; i < ids.length; i++) {
+        document.getElementById(ids[i]).remove();
+        content.append("div").attr("id", ids[i]);
     }
 }
 
@@ -62,6 +66,8 @@ function myId(name) {
 
 function topLeadActress() {
 
+    limpa();
+
     d3.csv("oscar_data.csv", function (error, data) {
 
         if (error) throw error;
@@ -99,21 +105,27 @@ function topLeadActress() {
 
 function plotTop10LeadActress(orderedActresses) {
 
-    var width = 1210;
-    var height = 1210;
+    var div_best_actress = d3.select("#" + "best-actress")
+        .attr("class", "col-lg-1");
 
-    var svg_best_actress = d3.select("#" + "best-actress")
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height);
+    var first_group = div_best_actress
+        .append("div")
+        .attr("class", "first_group");
+
+    var second_group = div_best_actress
+        .append("div")
+        .attr("class", "second_group");
+
+    var groups = [first_group, second_group];
 
     var top10LeadActress = getTop10LeadActress(orderedActresses);
 
     var name = 0;
     for (var i = 0; i < 10; i++) {
+        var my_div_group = (i % 2 === 0) ? groups[0] : groups[1];
 
         var actress = top10LeadActress[i][name];
-        plotLeadActress(actress, svg_best_actress, i);
+        plotLeadActress(actress, my_div_group, i);
     }
 }
 
@@ -127,21 +139,25 @@ function getTop10LeadActress(orderedActresses) {
     return top10LeadActress;
 }
 
-function plotLeadActress(actress, svg, i) {
+function plotLeadActress(actress, div, i) {
 
     var src = getImageSrc(actress);
     var id = myId(actress);
 
-    var y = (i % 10) * 110;
-    var x = Math.floor(i / 10) * 110;
     var size = 110;
     var padding_circle = 2;
 
-    var section = svg.append("svg")
-        .attr("class", "section")
-        .attr("margin","50px 50px");
+    var svg_width = size;
+    var svg_height = size;
 
-    var defs =  section
+    var img_section = div
+        .append("div")
+        .attr("class", "img_section")
+        .append("svg")
+        .attr("width", svg_width)
+        .attr("height", svg_height);
+
+    var defs =  img_section
         .append('svg:defs');
 
     var image = defs
@@ -155,23 +171,12 @@ function plotLeadActress(actress, svg, i) {
         .attr("width", size)
         .attr("height", size);
 
-    var circle = section
+    var circle = img_section
         .append("svg:circle")
-        .attr("cx", x + size / 2)
-        .attr("cy", y + size / 2)
+        .attr("cx", size / 2)
+        .attr("cy", size / 2)
         .attr("r", size/2 - padding_circle)
         .style("fill", "url(#"+ id +")")
         .attr("stroke", "#E0E3DC")
         .attr("stroke-width", 3);
 }
-
-
-
-
-
-
-
-
-
-
-
