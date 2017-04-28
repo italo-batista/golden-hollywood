@@ -1,0 +1,71 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.header {
+    display: table;
+    margin: 0 auto;
+}
+
+.header h1 {
+    color: #3d4449;
+    line-height: 1.5;
+    font-weight: 700;
+    font-size: 4.2em;
+    font-family: 'Poppins', sans-serif;
+}
+
+.menu {
+    display: table;
+    margin: 0 auto;
+}
+
+button {
+    border: 0;
+    padding: 10px;
+    width: 220px;
+    background-color: rgb(233, 233, 233);
+    background-color: rgba(196, 199, 194, 0.2);
+}
+
+button h4 {
+    color: slategrey;
+    margin: 0;
+}
+
+.btn-selected {
+    background-color: rgb(217, 217, 217);
+    background-color: rgba(196, 199, 194, 0.5);
+}
+
+.content {
+    width: 100px;
+    display: table;
+    margin: 20px auto;
+}
+
+.section {
+    margin: 10px 50px;
+}
+
+
+
+#best-actress {
+    display: block;
+}
+
+#best-films {
+    display: none;
+}
+
+#best-actor {
+    display: none;
+}
+
+#supporting-actress {
+    display: none;
+}
+
+#supporting-actor {
+    display: none;
+}

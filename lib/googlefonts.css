@@ -102,3 +102,43 @@
     src: local('Poppins'), local('Poppins-Regular'), url(https://fonts.gstatic.com/s/poppins/v1/HLBysyo0MQBO_7E-DWLwzg.woff2) format('woff2');
     unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
 }
+
+
+@font-face {
+    font-family: 'icomoon';
+    src:  url('fonts/icomoon.eot?wq4qn');
+    src:  url('fonts/icomoon.eot?wq4qn#iefix') format('embedded-opentype'),
+    url('fonts/icomoon.ttf?wq4qn') format('truetype'),
+    url('fonts/icomoon.woff?wq4qn') format('woff'),
+    url('fonts/icomoon.svg?wq4qn#icomoon') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    /* use !important to prevent issues with browser extensions that change fonts */
+    font-family: 'icomoon' !important;
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-code:before {
+    content: "\f05f";
+}
+.icon-link-external:before {
+    content: "\f07f";
+}
+.icon-mark-github:before {
+    content: "\f00a";
+}
+.icon-return:before {
+    content: "\f044";
+}
