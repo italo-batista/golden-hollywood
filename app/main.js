@@ -1,3 +1,4 @@
+
 function seleciona(chart) {
     var charts = {"1": "chart1", "2": "chart2", "3": "chart3", "4": "chart4", "5": "chart5",
         "6": "chart6", "7": "chart7", "8": "chart8", "9": "chart9", "10": "chart10"};
@@ -73,6 +74,7 @@ function topLeadActress() {
         if (error) throw error;
 
         var actresses = {};
+        var nominations = {};
 
         data.forEach(function (d) {
 
@@ -87,6 +89,11 @@ function topLeadActress() {
                 var name = d.atribuicao;
                 if (!actresses[name]) actresses[name] = 1;
                 else ++actresses[name];
+
+            } else if (isLeadActress(d) && !won(d)) {
+                var name = d.atribuicao;
+                if (!nominations[name]) nominations[name] = 1;
+                else ++nominations[name];
             }
         }); // end for
 
@@ -98,7 +105,19 @@ function topLeadActress() {
             return -a[1] + b[1];
         });
 
+
+        var topNominations = [];
+        for (var actress in nominations) {
+            topNominations.push([actress, nominations[actress]]);
+        }
+        topNominations.sort(function(a, b) {
+            return -a[1] + b[1];
+        });
+
+        console.log(topNominations);
+
         plotTop10LeadActress(topActresses);
+        plotTop10Nominations(topNominations);
 
     });
 }
@@ -118,7 +137,7 @@ function plotTop10LeadActress(orderedActresses) {
 
     var groups = [first_group, second_group];
 
-    var top10LeadActress = getTop10LeadActress(orderedActresses);
+    var top10LeadActress = getTop10Actress(orderedActresses);
 
     var name = 0;
     for (var i = 0; i < 10; i++) {
@@ -129,7 +148,33 @@ function plotTop10LeadActress(orderedActresses) {
     }
 }
 
-function getTop10LeadActress(orderedActresses) {
+function plotTop10Nominations(orderedActresses) {
+
+    var div_best_actress = d3.select("#" + "best-actress")
+        .attr("class", "col-lg-1");
+
+    var third_group = div_best_actress
+        .append("div")
+        .attr("class", "third_group");
+
+    var fourth_group = div_best_actress
+        .append("div")
+        .attr("class", "fourth_group");
+
+    var groups = [third_group, fourth_group];
+
+    var top10Actress = getTop10Actress(orderedActresses);
+
+    var name = 0;
+    for (var i = 0; i < 10; i++) {
+        var my_div_group = (i % 2 === 0) ? groups[0] : groups[1];
+
+        var actress = top10Actress[i][name];
+        plotLeadActress(actress, my_div_group, i);
+    }
+}
+
+function getTop10Actress(orderedActresses) {
 
     var top10LeadActress = [];
     for (var i = 0; i < 10; i++) {
