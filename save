@@ -1,3 +1,151 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+}
+
+.header {
+    display: table;
+    margin: 0 auto;
+}
+
+.header h1 {
+    color: #3d4449;
+    line-height: 1.5;
+    font-weight: 700;
+    font-size: 4.2em;
+    font-family: 'Poppins', sans-serif;
+}
+
+.menu {
+    display: table;
+    margin: 0 auto;
+}
+
+button {
+    border: 0;
+    padding: 10px;
+    width: 220px;
+    background-color: rgb(233, 233, 233);
+    background-color: rgba(196, 199, 194, 0.2);
+}
+
+button h4 {
+    color: slategrey;
+    margin: 0;
+}
+
+.btn-selected {
+    background-color: rgb(217, 217, 217);
+    background-color: rgba(196, 199, 194, 0.5);
+}
+
+.content {
+    display: table;
+    margin: 20px auto;
+}
+
+.img_section {
+    margin-bottom: 30px;
+}
+
+.first_group {
+    margin-right: 30px;
+
+    float: left;
+    position: relative;
+}
+
+.second_group {
+    margin-top: 60px;
+
+    float: left;
+    position: relative;
+}
+
+.won {
+    width: 500px;
+
+    float: left;
+    position: relative;
+}
+
+.nominees {
+    width: 500px;
+
+    float: left;
+    position: relative;
+}
+
+.center {
+    display: table;
+    margin: 0 auto;
+}
+
+
+#best-actress {
+    display: block;
+    width: 1030px;
+    height: 800px;
+}
+
+#best-films {
+    display: none;
+    width: 1210px;
+    height: 1210px;
+}
+
+#best-actor {
+    display: none;
+    width: 1210px;
+    height: 1210px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 function seleciona(chart) {
     var charts = {"1": "chart1", "2": "chart2", "3": "chart3", "4": "chart4", "5": "chart5",
@@ -20,37 +168,24 @@ function seleciona(chart) {
     plot(charts[chart]);
 }
 
-function limpa(id) {
+function limpa() {
 
-    var ids = [ "best-films", "lead-actress", "lead-actor"];
+    ids = [ "best-films", "best-actress", "best-actor", "supporting-actress", "supporting-actor" ];
 
     var content = d3.select(".content");
     for (var i = 0; i < ids.length; i++) {
         document.getElementById(ids[i]).remove();
-    }
-
-    content.append("div").attr("id", id);
-
-    var indexToRemove = ids.indexOf(id);
-    ids.splice(indexToRemove, 1);
-
-    for (var i = 0; i < ids.length; i++) {
         content.append("div").attr("id", ids[i]);
     }
 }
 
-function getImageSrc(name, category) {
+function getImageSrc(name) {
 
-    var folders = {"lead-actress":"actress", "lead-actor":"actor"};
-    var folder = folders[category];
-
-    var src = "../img/" + folder + "/";
+    var src = "../img/";
 
     for (var i = 0; i < name.length; i++) {
         if (name[i] === " ") {
             src = src + "_";
-        } else if (name[i] === "'") {
-            // do nothing
         } else {
             src = src + name[i];
         }
@@ -78,69 +213,67 @@ function myId(name) {
 
 
 
-function plotTops(mCategory) {
+function topLeadActress() {
 
-    limpa(mCategory);
-
-    var winners = {};
-    var nominations = {};
-
-    var categories = {"lead-actor":"Actor -- Leading Role", "lead-actress":"Actress -- Leading Role"};
+    limpa();
 
     d3.csv("oscar_data.csv", function (error, data) {
 
         if (error) throw error;
 
+        var actresses = {};
+        var nominations = {};
+
         data.forEach(function (d) {
 
-            function isLead(d) {
-                return d.categoria === categories[mCategory];
+            function isLeadActress(d) {
+                return d.categoria === "Actress -- Leading Role";
             }
             function won(d) {
                 return d.venceu === "YES"
             }
 
-            if (isLead(d) && won(d)) {
+            if (isLeadActress(d) && won(d)) {
                 var name = d.atribuicao;
-                if (!winners[name]) winners[name] = 1;
-                else ++winners[name];
+                if (!actresses[name]) actresses[name] = 1;
+                else ++actresses[name];
 
-            } else if (isLead(d) && !won(d)) {
+            } else if (isLeadActress(d) && !won(d)) {
                 var name = d.atribuicao;
                 if (!nominations[name]) nominations[name] = 1;
                 else ++nominations[name];
             }
         }); // end for
 
-        var topWinners = [];
-        for (var winner in winners) {
-            topWinners.push([winner, winners[winner]]);
+        var topActresses = [];
+        for (var actress in actresses) {
+            topActresses.push([actress, actresses[actress]]);
         }
-        topWinners.sort(function(a, b) {
+        topActresses.sort(function(a, b) {
             return -a[1] + b[1];
         });
 
 
         var topNominations = [];
-        for (var nominee in nominations) {
-            topNominations.push([nominee, nominations[nominee]]);
+        for (var actress in nominations) {
+            topNominations.push([actress, nominations[actress]]);
         }
         topNominations.sort(function(a, b) {
             return -a[1] + b[1];
         });
 
-        plotTop10Winners(topWinners, mCategory);
-        plotTop10Nominations(topNominations, mCategory);
+        plotTop10LeadActress(topActresses);
+        plotTop10Nominations(topNominations);
 
     });
 }
 
-function plotTop10Winners(orderedWinners, mCategory) {
+function plotTop10LeadActress(orderedActresses) {
 
-    var div_my_category = d3.select("#" + mCategory)
+    var div_best_actress = d3.select("#" + "best-actress")
         .attr("class", "col-lg-1");
 
-    var won = div_my_category
+    var won = div_best_actress
         .append("div")
         .attr("class", "won")
         .append("div")
@@ -156,23 +289,23 @@ function plotTop10Winners(orderedWinners, mCategory) {
 
     var groups = [first_group, second_group];
 
-    var top10 = getTop10(orderedWinners);
+    var top10LeadActress = getTop10Actress(orderedActresses);
 
     var name = 0;
     for (var i = 0; i < 10; i++) {
         var my_div_group = (i % 2 === 0) ? groups[0] : groups[1];
 
-        var winner = top10[i][name];
-        plot(winner, mCategory, my_div_group, "won", i);
+        var actress = top10LeadActress[i][name];
+        plotLeadActress(actress, my_div_group, "won", i);
     }
 }
 
-function plotTop10Nominations(orderedNominations, mCategory) {
+function plotTop10Nominations(orderedActresses) {
 
-    var div_my_category = d3.select("#" + mCategory)
+    var div_best_actress = d3.select("#" + "best-actress")
         .attr("class", "col-lg-1");
 
-    var nominees = div_my_category
+    var nominees = div_best_actress
         .append("div")
         .attr("class", "nominees")
         .append("div")
@@ -188,31 +321,31 @@ function plotTop10Nominations(orderedNominations, mCategory) {
 
     var groups = [first_group, second_group];
 
-    var top10 = getTop10(orderedNominations);
+    var top10Actress = getTop10Actress(orderedActresses);
 
     var name = 0;
     for (var i = 0; i < 10; i++) {
         var my_div_group = (i % 2 === 0) ? groups[0] : groups[1];
 
-        var nominee = top10[i][name];
-        plot(nominee, mCategory, my_div_group, "nominee", i);
+        var actress = top10Actress[i][name];
+        plotLeadActress(actress, my_div_group, "nominee", i);
     }
 }
 
-function getTop10(ordered) {
+function getTop10Actress(orderedActresses) {
 
-    var top10 = [];
+    var top10LeadActress = [];
     for (var i = 0; i < 10; i++) {
-        top10.push(ordered[i]);
+        top10LeadActress.push(orderedActresses[i]);
     }
 
-    return top10;
+    return top10LeadActress;
 }
 
-function plot(name, category, div, type, i) {
+function plotLeadActress(actress, div, type, i) {
 
-    var src = getImageSrc(name, category);
-    var id = myId(name);
+    var src = getImageSrc(actress);
+    var id = myId(actress);
 
     var circle_stroke_color = {"won":"#DAA520", "nominee":"#C0C0C0"}; //"#a67c00 #bf9b30
 
@@ -254,7 +387,7 @@ function plot(name, category, div, type, i) {
 
     circle
         .append("svg:title")
-        .text(name);
+        .text(actress);
 }
 
-plotTops("lead-actress");
+topLeadActress();
