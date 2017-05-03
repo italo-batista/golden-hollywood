@@ -38,6 +38,38 @@ button h4 {
     background-color: rgba(196, 199, 194, 0.5);
 }
 
+#indexs {
+    width: 50px;
+    height: 800px;
+
+    margin-top: 15%;
+    margin-left: 10%;
+}
+
+#indexs button {
+    width: 35px;
+    height: 60px;
+    padding: 10px;
+
+    border: 0;
+    background-color: rgb(252, 255, 250);
+}
+
+#indexs button h4 {
+    -webkit-transform: rotate(90deg);
+    -moz-transform: rotate(90deg);
+    -ms-transform: rotate(90deg);
+    -o-transform: rotate(90deg);
+    transform: rotate(-90deg);
+
+    white-space: inherit;
+}
+
+#indexs .btn-selected {
+    background-color: rgb(217, 217, 217);
+    background-color: rgba(196, 199, 194, 0.5);
+}
+
 .content {
     display: table;
     margin: 40px auto;
@@ -62,14 +94,14 @@ button h4 {
 }
 
 .won {
-    width: 500px;
+    width: 400px;
 
     float: left;
     position: relative;
 }
 
 .nominees {
-    width: 500px;
+    width: 400px;
 
     float: left;
     position: relative;
@@ -81,18 +113,19 @@ button h4 {
 }
 
 
-#lead-actress {
-    width: 1030px;
+#best-films {
+    display: none;
+    width: 1000px;
     height: 800px;
 }
 
-#best-films {
-    display: none;
-    width: 1210px;
-    height: 1210px;
+#lead-actress {
+    width: 1000px;
+    height: 800px;
 }
 
 #lead-actor {
-    width: 1030px;
+    width: 1000px;
     height: 800px;
 }
+

@@ -44,7 +44,7 @@ function getImageSrc(name, category) {
     var folders = {"lead-actress":"actress", "lead-actor":"actor"};
     var folder = folders[category];
 
-    var src = "../img/" + folder + "/";
+    var src = "img/" + folder + "/";
 
     for (var i = 0; i < name.length; i++) {
         if (name[i] === " ") {
@@ -142,9 +142,16 @@ function plotTop10Winners(orderedWinners, mCategory) {
 
     var won = div_my_category
         .append("div")
-        .attr("class", "won")
+        .attr("class", "won");
+
+    won.append("div").
+    attr("class", "won-title");
+
+    won = won
         .append("div")
         .attr("class", "center");
+
+    plotTitle(true);
 
     var first_group = won
         .append("div")
@@ -174,9 +181,16 @@ function plotTop10Nominations(orderedNominations, mCategory) {
 
     var nominees = div_my_category
         .append("div")
-        .attr("class", "nominees")
+        .attr("class", "nominees");
+
+    nominees.append("div").
+        attr("class", "nominees-title");
+
+    nominees = nominees
         .append("div")
         .attr("class", "center");
+
+    plotTitle(false);
 
     var first_group = nominees
         .append("div")
@@ -197,16 +211,6 @@ function plotTop10Nominations(orderedNominations, mCategory) {
         var nominee = top10[i][name];
         plot(nominee, mCategory, my_div_group, "nominee", i);
     }
-}
-
-function getTop10(ordered) {
-
-    var top10 = [];
-    for (var i = 0; i < 10; i++) {
-        top10.push(ordered[i]);
-    }
-
-    return top10;
 }
 
 function plot(name, category, div, type, i) {
@@ -257,4 +261,44 @@ function plot(name, category, div, type, i) {
         .text(name);
 }
 
+function plotTitle(hasWon) {
+
+    var width = 400;
+    var N = 48;      // tamanho máximo de palavra que cabe numa box de uma disciplina
+    var xTitleScale = d3.scaleLinear()
+        .domain([0, N])
+        .range([0, width]);
+
+    var title = "Top "+ (hasWon ? "Winners" : "Nominees");
+
+    var centralizar = width/2 - xTitleScale(title.length)/2;
+
+    var c = hasWon ? "won" : "nominees";
+
+    var div = d3.select("." + c + "-title");
+
+    var svg = div.append("svg")
+        .attr("width", width)
+        .attr("height", 35);
+
+    svg.append("text")
+        .attr("x", centralizar)
+        .attr("y", "10px")
+        .attr("dy", ".35em")
+        .attr("font-weight", "700")
+        .attr("font-size", "18px")
+        .text(title);
+}
+
+function getTop10(ordered) {
+
+    var top10 = [];
+    for (var i = 0; i < 10; i++) {
+        top10.push(ordered[i]);
+    }
+
+    return top10;
+}
+
 plotTops("lead-actress");
+
