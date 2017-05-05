@@ -1,23 +1,44 @@
 body {
     font-family: 'Open Sans', sans-serif;
+
+    background-image: url("lib/background/7468.jpg");
+    background-repeat: repeat;
+    background-color: rgba(255, 255, 255, 0.71) !important;
+    background-blend-mode: color;
 }
 
 .header {
     display: table;
-    margin: 0 auto;
+    margin: 20px auto;
+    width: 79%;
+
+    color: #DAA520;
+    background: #1b1b1a; /* For browsers that do not support gradients */
 }
 
 .header h1 {
-    color: #3d4449;
-    line-height: 1.5;
-    font-weight: 700;
-    font-size: 4.2em;
-    font-family: 'Poppins', sans-serif;
+    margin-top: 0px;
+    margin-bottom: 0;
+    font-size: 90px;
+    font-weight: lighter;
+    text-align: center;
+    text-transform: uppercase;
+    font-family: 'UpperEastSide', sans-serif;
+}
+
+.header h2 {
+    margin-top: 0;
+    margin-bottom: 0px;
+    font-size: 3em;
+    text-align: center;
+    text-transform: lowercase;
+    font-family: 'Above', sans-serif;
 }
 
 .menu {
     display: table;
     margin: 0 auto;
+    font-family: 'DKOtago', sans-serif;
 }
 
 button {
@@ -25,7 +46,7 @@ button {
     padding: 10px;
     width: 220px;
     background-color: rgb(233, 233, 233);
-    background-color: rgba(196, 199, 194, 0.2);
+    background-color: rgba(196, 199, 194, 0.4);
 }
 
 button h4 {
@@ -35,21 +56,22 @@ button h4 {
 
 .btn-selected {
     background-color: rgb(217, 217, 217);
-    background-color: rgba(196, 199, 194, 0.5);
+    background-color: rgba(196, 199, 194, 0.75);
 }
 
 #indexs {
     width: 50px;
     height: 800px;
 
-    margin-top: 15%;
-    margin-left: 10%;
+    margin-top: 13%;
+    margin-left: 8%;
 }
 
 #indexs button {
     width: 35px;
     height: 60px;
-    padding: 10px;
+
+    padding: 0px;
 
     border: 0;
     background-color: rgb(252, 255, 250);
@@ -73,6 +95,12 @@ button h4 {
 .content {
     display: table;
     margin: 40px auto;
+}
+
+.content text {
+    width: 100%;
+    font-size: 20px;
+    font-weight: lighter;
 }
 
 .img_section {
@@ -112,20 +140,22 @@ button h4 {
     margin: 0 auto;
 }
 
-
 #best-films {
     display: none;
     width: 1000px;
-    height: 800px;
 }
 
 #lead-actress {
+    display: block;
     width: 1000px;
-    height: 800px;
 }
 
 #lead-actor {
+    display: block;
     width: 1000px;
-    height: 800px;
+}
+
+.row {
+    margin: 0 0;
 }
 

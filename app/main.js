@@ -1,26 +1,58 @@
 
-function seleciona(chart) {
-    var charts = {"1": "chart1", "2": "chart2", "3": "chart3", "4": "chart4", "5": "chart5",
-        "6": "chart6", "7": "chart7", "8": "chart8", "9": "chart9", "10": "chart10"};
+function selectMenu(menu) {
+
+    var menus = ["menu-film", "menu-actress", "menu-actor"];
+    var categories = {"menu-film":"best-films", "menu-actress":"lead-actress", "menu-actor":"lead-actor"};
+
     var selectedChart;
     var hiddenChart;
-    for (var c in charts) {
-        if (chart === c) {
-            document.getElementById(c).className += "btn-selected";
-            selectedChart = document.getElementById(charts[c]);
+    for (var i = 0; i < menus.length; i++) {
+
+        var m = menus[i];
+        if (m === menu) {
+            document.getElementById(m).className += "btn-selected";
+            selectedChart = document.getElementById(categories[m]);
             selectedChart.style.display = "block";
         } else {
-            document.getElementById(c).className = document.getElementById(c).className.split("btn-selected").join("");
-            hiddenChart = document.getElementById(charts[c]);
+            document.getElementById(m).className = document.getElementById(m).className.split("btn-selected").join("");
+            hiddenChart = document.getElementById(categories[m]);
             hiddenChart.style.display = "none";
         }
     }
 
-    limpa();
-    plot(charts[chart]);
+    plotTops(categories[menu], "all");
 }
 
-function limpa(id) {
+function selectFilter(id) {
+
+    var ids = ["20s", "30s", "40s", "50s", "60s", "all"];
+
+    for (var i = 0; i < ids.length; i++) {
+
+        if (id === ids[i]) {
+            console.log( document.getElementById(id).className)
+            document.getElementById(ids[i]).className += "btn-selected";
+        } else {
+            document.getElementById(ids[i]).className = document.getElementById(ids[i]).className.split("btn-selected").join("");
+        }
+    }
+}
+
+function getCategorySelected() {
+
+    var buttons = ["menu-film", "menu-actress", "menu-actor"];
+    var categories = {"menu-film":"best-films", "menu-actress":"lead-actress", "menu-actor":"lead-actor"};
+
+    for (var i = 0; i < buttons.length; i++) {
+
+        var className = document.getElementById( buttons[i] ).className;
+        if (className === "btn-selected") {
+            return categories[buttons[i]];
+        }
+    }
+}
+
+function clear(id) {
 
     var ids = [ "best-films", "lead-actress", "lead-actor"];
 
@@ -44,7 +76,7 @@ function getImageSrc(name, category) {
     var folders = {"lead-actress":"actress", "lead-actor":"actor"};
     var folder = folders[category];
 
-    var src = "img/" + folder + "/";
+    var src = "../img/" + folder + "/";
 
     for (var i = 0; i < name.length; i++) {
         if (name[i] === " ") {
@@ -75,19 +107,30 @@ function myId(name) {
     return id.toLowerCase();
 }
 
+function getYear(s) {
+    var ano = parseInt( s.substring(0, 4) );
+    return ano;
+}
 
 
+function filterAndPlot(filterId) {
 
-function plotTops(mCategory) {
+    selectFilter(filterId);
 
-    limpa(mCategory);
+    var category = getCategorySelected();
+    plotTops(category, filterId);
+}
+
+function plotTops(mCategory, filter) {
+
+    clear(mCategory);
 
     var winners = {};
     var nominations = {};
 
     var categories = {"lead-actor":"Actor -- Leading Role", "lead-actress":"Actress -- Leading Role"};
 
-    d3.csv("oscar_data.csv", function (error, data) {
+    d3.csv("data/oscar_data.csv", function (error, data) {
 
         if (error) throw error;
 
@@ -99,16 +142,41 @@ function plotTops(mCategory) {
             function won(d) {
                 return d.venceu === "YES"
             }
+            function mustFilter(d) {
 
-            if (isLead(d) && won(d)) {
-                var name = d.atribuicao;
-                if (!winners[name]) winners[name] = 1;
-                else ++winners[name];
+                var year = getYear(d);
 
-            } else if (isLead(d) && !won(d)) {
-                var name = d.atribuicao;
-                if (!nominations[name]) nominations[name] = 1;
-                else ++nominations[name];
+                if (filter == "all")
+                    return true;
+
+                else if (filter == "20s")
+                    return year >= 1920 & year < 1930;
+
+                else if (filter == "30s")
+                    return year >= 1930 & year < 1940;
+
+                else if (filter == "40s")
+                    return year >= 1940 & year < 1950;
+
+                else if (filter == "50s")
+                    return year >= 1950 & year < 1960;
+
+                else if (filter == "60s")
+                    return year >= 1960 & year < 1970;
+            }
+
+            if (mustFilter(d.ano)) {
+
+                if (isLead(d) && won(d)) {
+                    var name = d.atribuicao;
+                    if (!winners[name]) winners[name] = 1;
+                    else ++winners[name];
+
+                } else if (isLead(d) && !won(d)) {
+                    var name = d.atribuicao;
+                    if (!nominations[name]) nominations[name] = 1;
+                    else ++nominations[name];
+                }
             }
         }); // end for
 
@@ -119,8 +187,7 @@ function plotTops(mCategory) {
         topWinners.sort(function(a, b) {
             return -a[1] + b[1];
         });
-
-
+        
         var topNominations = [];
         for (var nominee in nominations) {
             topNominations.push([nominee, nominations[nominee]]);
@@ -167,10 +234,13 @@ function plotTop10Winners(orderedWinners, mCategory) {
 
     var name = 0;
     for (var i = 0; i < 10; i++) {
-        var my_div_group = (i % 2 === 0) ? groups[0] : groups[1];
 
-        var winner = top10[i][name];
-        plot(winner, mCategory, my_div_group, "won", i);
+        if (top10[i] != null) {
+            var my_div_group = (i % 2 === 0) ? groups[0] : groups[1];
+
+            var winner = top10[i][name];
+            plot(winner, mCategory, my_div_group, "won", i);
+        }
     }
 }
 
@@ -206,10 +276,13 @@ function plotTop10Nominations(orderedNominations, mCategory) {
 
     var name = 0;
     for (var i = 0; i < 10; i++) {
-        var my_div_group = (i % 2 === 0) ? groups[0] : groups[1];
 
-        var nominee = top10[i][name];
-        plot(nominee, mCategory, my_div_group, "nominee", i);
+        if (top10[i] != null) {
+            var my_div_group = (i % 2 === 0) ? groups[0] : groups[1];
+
+            var nominee = top10[i][name];
+            plot(nominee, mCategory, my_div_group, "nominee", i);
+        }
     }
 }
 
@@ -264,7 +337,7 @@ function plot(name, category, div, type, i) {
 function plotTitle(hasWon) {
 
     var width = 400;
-    var N = 48;      // tamanho máximo de palavra que cabe numa box de uma disciplina
+    var N = 40;      // tamanho máximo de palavra que cabe numa box de uma disciplina
     var xTitleScale = d3.scaleLinear()
         .domain([0, N])
         .range([0, width]);
@@ -281,12 +354,23 @@ function plotTitle(hasWon) {
         .attr("width", width)
         .attr("height", 35);
 
+    var rect_width = 68;
+    var rect_x = (100 - rect_width)/2;
+
+    svg.append("rect")
+        .attr("x", rect_x+"%")
+        .attr("y", "0%")
+        .attr("width",rect_width+"%")
+        .attr("height","30px")
+        .style("fill", "#f5c959");
+
     svg.append("text")
         .attr("x", centralizar)
-        .attr("y", "10px")
+        .attr("y", "15px")
         .attr("dy", ".35em")
         .attr("font-weight", "700")
         .attr("font-size", "18px")
+        .style("fill", "#000")
         .text(title);
 }
 
@@ -300,5 +384,5 @@ function getTop10(ordered) {
     return top10;
 }
 
-plotTops("lead-actress");
+plotTops("lead-actress", "all");
 

@@ -1,11 +1,11 @@
 <!doctype html>
 <html>
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Hollywood Golden Age</title>
+    <link rel="icon" href="lib/fav.png" />
 
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="lib/bootstrap/css/bootstrap-theme.css">
@@ -18,55 +18,57 @@
 
 <body>
     <div class="header">
-        <h1>Hollywood Golden Age Through Oscar</h1>
+        <h1>HOLLYWOOD GOLDEN AGE</h1>
+        <h2>through oscar</h2>
     </div>
 
     <div class="menu">
-        <div id="categories" class="row">
-            <button onclick="bestFilmes">
-                <h4 class="headers">Best Films</h4>
+            <div id="categories" class="row">
+                <button id="menu-film" onclick="selectMenu(this.id)">
+                    <h4 class="headers">Best Films</h4>
+                </button>
+
+                <button id="menu-actress" class="btn-selected" onclick="selectMenu(this.id)">
+                    <h4 class="headers">Top Lead Actress</h4>
+                </button>
+
+                <button id="menu-actor" onclick="selectMenu(this.id)">
+                    <h4 class="headers">Top Lead Actor</h4>
+                </button>
+            </div>
+        </div>
+
+    <div class="row">
+        <div id="indexs" class="col-lg-1">
+            <button id="20s" onclick="filterAndPlot(this.id)">
+                <h4 class="headers">20's</h4>
             </button>
 
-            <button class="btn-selected" onclick="plotTops('lead-actress')">
-                <h4 class="headers">Top Lead Actress</h4>
+            <button id="30s" onclick="filterAndPlot(this.id)">
+                <h4 class="headers">30's</h4>
             </button>
 
-            <button onclick="plotTops('lead-actor')">
-                <h4 class="headers">Top Lead Actor</h4>
+            <button id="40s" onclick="filterAndPlot(this.id)">
+                <h4 class="headers">40's</h4>
+            </button>
+
+            <button id="50s" onclick="filterAndPlot(this.id)">
+                <h4 class="headers">50's</h4>
+            </button>
+
+            <button id="60s" onclick="filterAndPlot(this.id)">
+                <h4 class="headers">60's</h4>
+            </button>
+
+            <button id="all" class="btn-selected" onclick="filterAndPlot(this.id)">
+                <h4 class="headers">All</h4>
             </button>
         </div>
-    </div>
-
-    <div id="indexs" class="col-lg-1">
-        <button id="1" onclick="">
-            <h4 class="headers">20's</h4>
-        </button>
-
-        <button id="2" onclick="">
-            <h4 class="headers">30's</h4>
-        </button>
-
-        <button id="3" onclick="">
-            <h4 class="headers">40's</h4>
-        </button>
-
-        <button id="4" onclick="">
-            <h4 class="headers">50's</h4>
-        </button>
-
-        <button id="5" onclick="">
-            <h4 class="headers">60's</h4>
-        </button>
-
-        <button id="" class="btn-selected" onclick="">
-            <h4 class="headers">All</h4>
-        </button>
-    </div>
-
-    <div class="content">
-        <div id="best-films"></div>
-        <div id="lead-actress"></div>
-        <div id="lead-actor"></div>
+        <div class="content">
+            <div id="best-films"></div>
+            <div id="lead-actress"></div>
+            <div id="lead-actor"></div>
+        </div>
     </div>
 
     <!-- Scripts -->
