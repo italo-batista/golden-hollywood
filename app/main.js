@@ -112,6 +112,25 @@ function getYear(s) {
     return ano;
 }
 
+function formataInfo(infos, hasWon) {
+
+    var nTimes = infos.length + " time (s)"
+    var ans = hasWon? "Won "+ nTimes + " in:" : "Nominated "+ nTimes + " in:";
+
+    for (var i = 0; i < infos.length; i++) {
+
+        ans = ans + "\n";
+
+        var splitted = infos[i].filme.split(" {'");
+        var film =  splitted[0];
+        var carach = splitted[1].replace("'}", "").replace("{'", "");
+
+        ans = ans + " - " + film + ", as " + carach + ", in " + infos[i].ano;
+    }
+
+    return ans;
+}
+
 
 function filterAndPlot(filterId) {
 
@@ -127,6 +146,8 @@ function plotTops(mCategory, filter) {
 
     var winners = {};
     var nominations = {};
+    var winners_info = {};
+    var nominations_info = {};
 
     var categories = {"lead-actor":"Actor -- Leading Role", "lead-actress":"Actress -- Leading Role"};
 
@@ -134,36 +155,36 @@ function plotTops(mCategory, filter) {
 
         if (error) throw error;
 
+        function isLead(d) {
+            return d.categoria === categories[mCategory];
+        }
+        function won(d) {
+            return d.venceu === "YES"
+        }
+        function mustFilter(d) {
+
+            var year = getYear(d);
+
+            if (filter == "all")
+                return true;
+
+            else if (filter == "20s")
+                return year >= 1920 & year < 1930;
+
+            else if (filter == "30s")
+                return year >= 1930 & year < 1940;
+
+            else if (filter == "40s")
+                return year >= 1940 & year < 1950;
+
+            else if (filter == "50s")
+                return year >= 1950 & year < 1960;
+
+            else if (filter == "60s")
+                return year >= 1960 & year < 1970;
+        }
+
         data.forEach(function (d) {
-
-            function isLead(d) {
-                return d.categoria === categories[mCategory];
-            }
-            function won(d) {
-                return d.venceu === "YES"
-            }
-            function mustFilter(d) {
-
-                var year = getYear(d);
-
-                if (filter == "all")
-                    return true;
-
-                else if (filter == "20s")
-                    return year >= 1920 & year < 1930;
-
-                else if (filter == "30s")
-                    return year >= 1930 & year < 1940;
-
-                else if (filter == "40s")
-                    return year >= 1940 & year < 1950;
-
-                else if (filter == "50s")
-                    return year >= 1950 & year < 1960;
-
-                else if (filter == "60s")
-                    return year >= 1960 & year < 1970;
-            }
 
             if (mustFilter(d.ano)) {
 
@@ -172,11 +193,17 @@ function plotTops(mCategory, filter) {
                     if (!winners[name]) winners[name] = 1;
                     else ++winners[name];
 
+                    if (!winners_info[name]) winners_info[name] = [{filme: d.comentario, ano: d.ano}];
+                    else winners_info[name].push({filme: d.comentario, ano: d.ano});
+
                 } else if (isLead(d) && !won(d)) {
                     var name = d.atribuicao;
                     if (!nominations[name]) nominations[name] = 1;
                     else ++nominations[name];
                 }
+
+                if (!nominations_info[name]) nominations_info[name] = [{filme: d.comentario, ano: d.ano}];
+                else nominations_info[name].push({filme: d.comentario, ano: d.ano});
             }
         }); // end for
 
@@ -196,13 +223,13 @@ function plotTops(mCategory, filter) {
             return -a[1] + b[1];
         });
 
-        plotTop10Winners(topWinners, mCategory);
-        plotTop10Nominations(topNominations, mCategory);
+        plotTop10Winners(topWinners, winners_info, mCategory);
+        plotTop10Nominations(topNominations, nominations_info, mCategory);
 
     });
 }
 
-function plotTop10Winners(orderedWinners, mCategory) {
+function plotTop10Winners(orderedWinners, infos, mCategory) {
 
     var div_my_category = d3.select("#" + mCategory)
         .attr("class", "col-lg-1");
@@ -232,19 +259,21 @@ function plotTop10Winners(orderedWinners, mCategory) {
 
     var top10 = getTop10(orderedWinners);
 
-    var name = 0;
+    var NAME = 0;
     for (var i = 0; i < 10; i++) {
 
         if (top10[i] != null) {
             var my_div_group = (i % 2 === 0) ? groups[0] : groups[1];
 
-            var winner = top10[i][name];
-            plot(winner, mCategory, my_div_group, "won", i);
+            var winner = top10[i][NAME];
+            var info = formataInfo(infos[winner], true);
+
+            plot(winner, info, mCategory, my_div_group, "won", i+1);
         }
     }
 }
 
-function plotTop10Nominations(orderedNominations, mCategory) {
+function plotTop10Nominations(orderedNominations, infos, mCategory) {
 
     var div_my_category = d3.select("#" + mCategory)
         .attr("class", "col-lg-1");
@@ -281,12 +310,14 @@ function plotTop10Nominations(orderedNominations, mCategory) {
             var my_div_group = (i % 2 === 0) ? groups[0] : groups[1];
 
             var nominee = top10[i][name];
-            plot(nominee, mCategory, my_div_group, "nominee", i);
+            var info = formataInfo(infos[nominee], false);
+
+            plot(nominee, info, mCategory, my_div_group, "nominee", i+1);
         }
     }
 }
 
-function plot(name, category, div, type, i) {
+function plot(name, info, category, div, type, index) {
 
     var src = getImageSrc(name, category);
     var id = myId(name);
@@ -297,7 +328,7 @@ function plot(name, category, div, type, i) {
     var padding_circle = 2;
 
     var svg_width = size;
-    var svg_height = size;
+    var svg_height = 130;
 
     var img_section = div
         .append("div")
@@ -308,6 +339,15 @@ function plot(name, category, div, type, i) {
 
     var defs =  img_section
         .append('svg:defs');
+
+    var position = img_section
+        .append("svg:text")
+        .text(index)
+        .attr("y", 10)
+        .attr("x", 0)
+        .style("fill", "#3e3e3e")
+        .style("font-size", "12px")
+        .style("font-weight", "bolder");
 
     var image = defs
         .append("svg:pattern")
@@ -329,9 +369,20 @@ function plot(name, category, div, type, i) {
         .attr("stroke", circle_stroke_color[type])
         .attr("stroke-width", 5);
 
+    var my_name = img_section
+        .append("svg:text")
+        .text(name)
+        .attr("y", svg_height - 10)
+        .attr("x", size/2)
+        .attr("text-anchor","middle")
+        .attr("alignment-baseline","central")
+        .style("fill", "#3e3e3e")
+        .style("font-size", "12px")
+        .style("font-weight", "bolder");
+
     circle
         .append("svg:title")
-        .text(name);
+        .text(info);
 }
 
 function plotTitle(hasWon) {
@@ -352,7 +403,8 @@ function plotTitle(hasWon) {
 
     var svg = div.append("svg")
         .attr("width", width)
-        .attr("height", 35);
+        .attr("height", 35)
+        .style("margin-bottom", "7px");
 
     var rect_width = 68;
     var rect_x = (100 - rect_width)/2;

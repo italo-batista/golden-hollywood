@@ -17,10 +17,10 @@ body {
 }
 
 .header h1 {
-    margin-top: 0px;
+    margin-top: 0;
     margin-bottom: 0;
-    font-size: 90px;
-    font-weight: lighter;
+    font-size: 80px;
+    font-weight: normal;
     text-align: center;
     text-transform: uppercase;
     font-family: 'UpperEastSide', sans-serif;
@@ -49,6 +49,11 @@ button {
     background-color: rgba(196, 199, 194, 0.4);
 }
 
+button:hover {
+    background-color: rgb(241, 241, 241);
+    background-color: rgba(215, 218, 213, 0.4);
+}
+
 button h4 {
     color: slategrey;
     margin: 0;
@@ -59,12 +64,17 @@ button h4 {
     background-color: rgba(196, 199, 194, 0.75);
 }
 
+.btn-selected:hover {
+    background-color: rgb(231, 231, 231);
+    background-color: rgba(211, 214, 209, 0.75);
+}
+
 #indexs {
     width: 50px;
-    height: 800px;
 
     margin-top: 13%;
     margin-left: 8%;
+    margin-right: 0;
 }
 
 #indexs button {
@@ -74,7 +84,13 @@ button h4 {
     padding: 0px;
 
     border: 0;
-    background-color: rgb(252, 255, 250);
+    background-color: rgb(233, 233, 233);
+    background-color: rgba(196, 199, 194, 0.4)
+}
+
+#indexs button:hover {
+    background-color: rgb(241, 241, 241);
+    background-color: rgba(215, 218, 213, 0.4);
 }
 
 #indexs button h4 {
@@ -89,7 +105,12 @@ button h4 {
 
 #indexs .btn-selected {
     background-color: rgb(217, 217, 217);
-    background-color: rgba(196, 199, 194, 0.5);
+    background-color: rgba(196, 199, 194, 0.75);
+}
+
+#indexs .btn-selected:hover {
+    background-color: rgb(231, 231, 231);
+    background-color: rgba(211, 214, 209, 0.75);
 }
 
 .content {
